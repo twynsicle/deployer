@@ -1,0 +1,383 @@
+$background-color: #F9F9F9;
+$dark-background-color: #F0EEEB;
+$primary-color: #2196f3;
+$primary-color-dark: #0063B2;
+$accent-color: #FF9A00;
+$error-color: #DD0D16;
+$green: #96CA2D;
+
+@mixin clearfix() {
+  display: table;
+  content: " ";
+  clear: both;
+}
+@mixin animation($args...) {
+  -webkit-animation: $args;
+  animation: $args;
+}
+@mixin keyframes($animation-name) {
+  @-webkit-keyframes #{$animation-name} {
+    @content;
+  }
+  @keyframes #{$animation-name} {
+    @content;
+  }
+}
+
+.primary-button {
+  display: inline-block;
+  border-radius: 3px;
+  text-align: center; font-size: 11px; font-family: "Helvetica Neue",Helvetica,Roboto,Arial,sans-serif;//font-weight: bold;
+  line-height: 12px;
+  min-width: 100px; height: 35px;
+  transition: color 0.25s, background-color 0.5s;
+  cursor: pointer;
+  padding: 12px 8px;
+}
+@mixin primary-button-icon($image-path:"", $padding-left:1.0rem) {
+  padding-left: $padding-left;
+
+  @if $image-path != "" {
+    &:before {
+      position: absolute; left: 10px; top: 6.5px;
+      background: transparent url($image-path) 0 0 / 22px 22px no-repeat;
+      width: 22px; height: 22px;
+      content: '';
+    }
+  }
+}
+.success-message {
+  @extend .primary-button;
+  @include primary-button-icon("../images/circle-tick.png");
+  color: $green;
+  &:before {
+    color: $green;
+  }
+}
+@keyframes spin {100% { transform: rotate(360deg); }}
+@-webkit-keyframes spin {100% { transform: rotate(360deg); }}
+.spinning-icon {
+  &:before {
+    animation-name: spin;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-play-state: paused;
+    animation-timing-function: linear;
+
+    -webkit-animation-name: spin;
+    -webkit-animation-duration: 2s;
+    -webkit-animation-fill-mode: forwards;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-play-state: paused;
+    -webkit-animation-timing-function: linear;
+  }
+}
+
+//
+// Global
+* {
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
+  outline: none;
+}
+
+button, .button {
+  margin: 0;
+  background-color: transparent;
+  &:hover {background-color: transparent;}
+  &:active {background-color: transparent;}
+  &:focus {background-color: transparent;}
+}
+
+//
+// Structure
+//
+body {
+  background-color: $background-color;
+  overflow-x: hidden;
+}
+
+body > div {
+  height: 100%;
+}
+
+.top-bar {
+  background-color: $primary-color;
+  height: 5em;
+  box-shadow: 0 0 4px black;
+  margin-bottom: 1.5rem;
+  padding: 0.6rem 0 0 0.5rem;
+  .title-area {float: none; clear: both; text-align: center;}
+  .title-area li {float: none; clear: both; }
+
+  .name h1 {
+    margin-left: -5px;
+    margin-top: 3px;
+    font-size: 1.2rem; font-family: "Helvetica Neue",Helvetica,Roboto,Arial,sans-serif;;
+  }
+}
+
+
+//
+// Search
+//
+#revision-search {
+  position: relative;
+  input {
+    padding: 0 5px 0 15px;
+    height: 60px;
+    font-size: 18px;
+    &:focus {
+      background-color: white;
+    }
+  }
+  button {;
+    position: absolute; right: 0; top: 0;
+    width: 60px; height: 60px;
+    background: transparent url("../images/search.svg") center center / 32px 32px no-repeat;
+    color: $primary-color;
+    transition: opacity 0.25s;
+    opacity: .6;
+    &:hover {opacity: 0.8;}
+  }
+}
+
+
+
+//
+// Log message
+//
+#log-message{
+  background-color: #333333;
+  color: $background-color;
+  border: 1px solid #ccc;
+  width: auto;
+  margin: 0 -2.5rem 1.5rem -2.5rem;
+
+  pre {
+    padding: 20px 5px 20px 10px;
+    font-size: 12px;
+    font-family: Lato, sans-serif;
+  }
+}
+@media only screen and (max-width: 64em) {
+  #log-message {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+//
+// Results
+//
+.website {margin-bottom: 20px;}
+.loading {position: fixed; width: 100%; text-align: center; opacity: 0.2; left: 0; top: 40%;}
+
+.website {
+  h6 {
+    color: $primary-color;
+    font-size: 17px;
+    margin: 0 0 3px 0;
+    font-weight: 400;
+  }
+  &> div {
+    border: 1px solid darken($background-color, 10);
+    background-color: white;
+    box-shadow: 0 1px 2px darken($background-color, 17);
+    padding: 15px 15px 0 15px;
+  }
+}
+
+ul.files {
+  list-style: none outside none;
+  width: 100%;
+  margin: 0;
+  display:inline-block;
+}
+li.file {
+  border-left: 4px solid white;
+  transition: border 0.2s;
+  &:not(:last-child) {border-bottom: 1px solid darken($background-color, 10);}
+  position: relative;
+  padding: 6px 6px 6px 14px;
+  &:after{@include clearfix;}
+
+  > div:first-child {
+    display:inline-block;
+  }
+  &.focused {border-left: 4px solid $accent-color;}
+}
+
+.file p {
+  font-size: 12px;
+  margin: 0;
+  cursor: pointer;
+  transition: color 0.2s;
+
+  &:hover {color: $primary-color;}
+  &.from {opacity: 0.54; margin-bottom: 6px;}
+  &.to {opacity: 0.8; padding-left: 10px;}
+}
+.database-file {opacity: 0.4;}
+
+.controls {
+  float: right;
+  display:inline-block;
+
+  > * {
+    float: right;
+    margin-top: 6px;
+  }
+
+  .view-diff {
+    @extend .primary-button;
+    width: 80px;
+    margin-left: 0.8rem;
+
+    background: $primary-color-dark;// url("../images/compare.png") 80px 6px / 25px 25px no-repeat;
+    &:hover{background-color: darken($primary-color-dark, 10);}
+    &:active{background-color: darken($primary-color-dark, 10);}
+  }
+  //.delete {background-color: $divider-color; &:hover {background-color: $divider-color;}}
+}
+
+.copy-container {
+  $width: 110px;
+  display: inline-block;
+  position: relative;
+  width: 110px; height: 35px;
+  overflow: hidden;
+  border-radius: 3px;
+
+  &> * {
+    position: absolute; top: 0; left: 0;
+    display: inline-block;
+    width: 100%; height: 100%;
+  }
+  button.copy {
+    @extend .primary-button;
+    @extend .spinning-icon;
+
+    background-color: $primary-color;
+    transition: left 0.4s;
+    &:hover {background-color: $primary-color-dark;}
+    &.deployed {left: 110px;}
+    &.deploying {
+      @include primary-button-icon("../images/loading.png", 8px);
+      &:before{animation-play-state: running;-webkit-animation-play-state: running;
+      }
+    }
+  }
+  .deployed-text {
+    @extend .success-message;
+  }
+}
+
+
+
+.secondary-controls {
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid darken($background-color, 10);
+  width: 100%;
+  padding: 0.8rem 0.4rem 0.8rem 0
+}
+
+.open-site {
+  @extend .primary-button;
+  @include primary-button-icon("../images/globe.png", 1.8rem);
+  width: 5rem;
+  margin-left: 0.8rem;
+}
+
+.secondary-control {
+  @extend .primary-button;
+  background-color: #f2f2f2;
+  color: rgba(0,0,0,0.54);
+  &:before {
+    opacity: 0.6;
+  }
+
+  &:hover {color: rgba(0,0,0,0.80); background-color: #f2f2f2;}
+  //&:hover:before{opacity: 0.8;}
+  &:active {color: rgba(0,0,0,0.80); background-color: #f2f2f2;}
+  &:focus {color: rgba(0,0,0,0.80); background-color: #f2f2f2;}
+  //&:focus {color: inherit; background-color: inherit;}
+}
+
+.recycle-container {
+  $width: 110px;
+  display: inline-block;
+  position: relative;
+  width: $width; height: 35px;
+  overflow: hidden;
+  border-radius: 3px;
+
+  &> * {
+    position: absolute; top: 0; left: 0;
+    display: inline-block;
+    width: 100%; height: 100%;
+  }
+  .recycle {
+    @extend .primary-button;
+    @extend .spinning-icon;
+    @include primary-button-icon("../images/refresh.png");
+    width: $width;
+    transition: left 0.4s, padding 0.5s;
+    &.recycled {left: $width;}
+    &.recycling {
+      @extend .spinning-icon;
+      &:before {animation-play-state: running;-webkit-animation-play-state: running;}
+    }
+  }
+  .recycled-text {
+    @extend .success-message;
+  }
+}
+
+//
+// Errors
+//
+.errors{
+  position: fixed; top: 0; right: 0;
+  z-index: 200;
+  padding: 20px;
+
+  ul {
+    list-style: none;
+  }
+  .error {
+    color: white;
+    border-radius: 3px;
+    font-size: 13px;
+    line-height: 16px;
+    min-width: 100px; min-height: 40px;
+    max-width: 600px;
+    cursor: pointer;
+    padding: 12px 12px 12px 42px;
+    margin-bottom: 15px;
+    background: $error-color url("../images/circle-error.svg") 8px center / 26px 26px no-repeat;
+    text-align: left;
+    // animation name / duration / easing / delay / play count /  direction / play
+    @include animation(fade-up 0.6s ease-in 0s 1 forwards running, fade-out 1s ease-in 30s 1 forwards running);
+    pre {
+      font-family: "Helvetica Neue",Helvetica,Roboto,Arial,sans-serif;
+    }
+    &.remove {
+      display: none;
+    }
+  }
+}
+
+@include keyframes (fade-up) {
+  0% {opacity: 0; transform: translateY(30px);}
+  100% {opacity: 100; transform: translate(0);}
+}
+
+@include keyframes (fade-out) {
+  0% {transform: translateX(0);}
+  100% {transform: translateX(600px);}
+}

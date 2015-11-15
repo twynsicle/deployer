@@ -1,0 +1,78 @@
+<nav class="top-bar" data-topbar role="navigation">
+	<ul class="title-area">
+		<li class="name">
+			<h1><a href="#">deployer</a></h1>
+		</li>
+	</ul>
+</nav>
+
+<div class="errors">
+	<ul>
+		<li ng-repeat="(id, error) in errors" class="error {{error.remove}}">
+			<pre>{{error.message}}</pre>
+		</li>
+	</ul>
+</div>
+
+<div class="row">
+	<div class="large-centered small-centered large-6 small-8 columns">
+		<div class="sidebar">
+			<form novalidate id="revision-search" >
+				<input type="text" ng-model="revisionNumber" placeholder="enter revision number"/>
+				<button class="button postfix" type="submit" ng-click="getRevision(revisionNumber)"></button>
+			</form>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div id="log-message" class="large-centered large-12 small-12 columns ng-hide" ng-show="showResults">
+		<pre>{{logMessage}}</pre>
+	</div>
+</div>
+
+<div class="loading ng-hide" ng-show="revisionLoading">
+	<img src="images/loading.gif" alt=""/>
+</div>
+
+<div class="row">
+	<div id="search-results" class="large-12 medium-12 centered columns ng-hide" ng-show="showResults">
+
+		<div ng-repeat="(name, website) in files" class="website">
+			<h6>{{name}}</h6>
+			<div>
+				<ul class="files">
+					<li ng-repeat="file in website" class="file {{file.deployed}} {{file.focused}}" ng-click="focusFile(file)">
+						<div class="" ng-class="{'database-file': file.isDatabase}">
+							<p class="from" ng-click="viewFile(file.sourceDir + file.fileName)">{{file.sourceDir + file.fileName}}</p>
+							<p class="to" ng-click="viewFile(file.destinationDir + file.fileName)">{{file.destinationDir + file.fileName}}</p>
+						</div>
+						<ng-switch on="file.status">
+							<div ng-switch-when="Z" class="controls" ng-if="!file.isDatabase">
+								<button class="tiny delete" ng-click="" disabled>delete</button>
+							</div>
+							<div ng-switch-default class="controls" ng-if="!file.isDatabase">
+								<button class="view-diff" ng-click="viewDiff(file.sourceDir + file.fileName, file.destinationDir + file.fileName)">compare</button>
+								<div class="copy-container">
+									<span class="deployed-text">deployed</span>
+									<button class="copy {{file.deployed}} {{file.deploying}}" ng-click="deployFile(file, file.sourceDir, file.destinationDir, file.fileName)">copy</button>
+								</div>
+							</div>
+						</ng-switch>
+
+					</li>
+				</ul>
+				<div class="secondary-controls">
+					<div ng-if="website.requiresRecycle" class="recycle-container">
+						<span class="recycled-text">recycled</span>
+						<button class="recycle secondary-control {{website.recycling}} {{website.recycled}}" ng-click="recycle(website, website.recyclePath)">recycle</button>
+					</div>
+					<a ng-href={{website.link}} target="_blank">
+						<button class="open-site secondary-control">view site</button>
+					</a>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
